@@ -9,13 +9,13 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager as CM
 
 # TU SOBIE WPISZ SWOJE DANE LOGOWANIA
-USR_LOGIN = input('USERNAME: ')
-USR_PASSWORD = input('PASSWORD: ')
+USR_LOGIN = 'kebirs_py'
+USR_PASSWORD = '12345Wdg'
 
-usr = input('Nazwa rudej na insta: ')
+usr = input('Target instagram name: ')
 
 user_input = input(
-    'Ile jej followersow chcesz, ale nie za duzo bo to troche zajmie xD:')
+    'Number of followers u want to scrape (> 8):')
 TIME = 0.069 * int(user_input)
 
 
@@ -80,17 +80,22 @@ def scrape(username):
     # scrolling in followers using end button
     for i in range(round(TIME)):
         ActionChains(browser).send_keys(Keys.END).perform()
-        time.sleep(3)
+        time.sleep(2)
 
-        followers = browser.find_elements_by_xpath(
-            '//*[@id="react-root"]/section/main/div/ul/div/li/div/div[1]/div[2]/div[1]/a')
+        followers_xpath = '//*[@id="react-root"]/section/main/div/ul/div/li/div/div[1]/div[2]/div[1]/a'
+
+        followers = browser.find_elements_by_xpath(followers_xpath)
 
         urls = []
 
         # getting url from href attribute in title
+        followers_num = 0
         for n in followers:
             if n.get_attribute('href') is not None:
                 urls.append(n.get_attribute('href'))
+                followers_num += 1
+                if followers_num == int(user_input):
+                    break
             else:
                 continue
 
